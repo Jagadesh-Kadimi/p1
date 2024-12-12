@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Phishing URL Detection</h1>
+        <form action="/predict" method="POST">
+            <label for="url">Enter URL:</label>
+            <input type="text" id="url" name="url" placeholder="http://example.com" required>
+            <label for="model">Model</label>
+            <select id="model" name="model" required>
+               <!--<option value="random_forest">Random Forest</option>-->
+                <option value="gradient_boosting">Gradient Boosting</option>
+            </select>
+            <button type="submit">Predict</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -3,15 +3,25 @@ import pickle
 from sklearn.preprocessing import StandardScaler
 from scripts.feature_extraction import extract_features_from_url
 import os
-print(os.getcwd()) 
-print(os.listdir('custom_templates'))  
+
 
 app = Flask(__name__, template_folder='custom_templates')
 
+import os
 
-rf_model = pickle.load(open('models/phishing_gb.pkl', 'rb'))
-gb_model = pickle.load(open('models/phishing_rf.pkl', 'rb'))
-scaler = pickle.load(open('models/scaler.pkl', 'rb'))
+# Get the current working directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the full path to the models directory
+models_dir = os.path.join(current_dir, 'models')
+
+# Load models
+rf_model = pickle.load(open(os.path.join(models_dir, 'phishing_gb.pkl'), 'rb'))
+gb_model = pickle.load(open(os.path.join(models_dir, 'phishing_rf.pkl'), 'rb'))
+scaler = pickle.load(open.path.join(models_dir,'scaler.pkl'),'rb')
+# rf_model = pickle.load(open('models/phishing_gb.pkl', 'rb'))
+# gb_model = pickle.load(open('models/phishing_rf.pkl', 'rb'))
+# scaler = pickle.load(open('models/scaler.pkl', 'rb'))
 
 @app.route('/')
 def home():

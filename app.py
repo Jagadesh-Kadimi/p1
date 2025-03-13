@@ -1,18 +1,30 @@
 from flask import Flask, render_template, request
 import pickle
+import os
 from sklearn.preprocessing import StandardScaler
 from scripts.feature_extraction import extract_features_from_url
-import os
-print(os.getcwd()) 
-print(os.listdir('custom_templates'))  
 
-app = Flask(__name__, template_folder='custom_templates')
+# Get the absolute path of the current script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODELS_DIR = os.path.join(BASE_DIR, 'models')
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'custom_templates')
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get script's directory
-rf_model = pickle.load(open(os.path.join(BASE_DIR, 'models', 'phishing_gb.pkl'), 'rb'))
-gb_model = pickle.load(open(os.path.join(BASE_DIR, 'models', 'phishing_rf.pkl'), 'rb'))
-scaler = pickle.load(open(os.path.join(BASE_DIR, 'models', 'scaler.pkl'), 'rb'))
+# Debugging: Print working directory and check models folder
+print(f"Current Working Directory: {BASE_DIR}")
+print(f"Available Templates: {os.listdir(TEMPLATES_DIR)}")
+print(f"Available Model Files: {os.listdir(MODELS_DIR)}")
 
+app = Flask(__name__, template_folder=TEMPLATES_DIR)
+
+# Load models and scaler safely
+try:
+    rf_model = pickle.load(open(os.path.join(MODELS_DIR, 'phishing_gb.pkl'), 'rb'))
+    gb_model = pickle.load(open(os.path.join(MODELS_DIR, 'phishing_rf.pkl'), 'rb'))
+    scaler = pickle.load(open(os.path.join(MODELS_DIR, 'scaler.pkl'), 'rb'))
+    print("✅ Models loaded successfully!")
+except FileNotFoundError as e:
+    print(f"❌ Error: {e}")
+    exit(1)
 
 @app.route('/')
 def home():
@@ -22,8 +34,12 @@ def home():
 def predict():
     url = request.form['url']
     model_type = request.form['model']
-    features = extract_features_from_url(url)
-    features_scaled = scaler.transform([features])
+    
+    try:
+        features = extract_features_from_url(url)
+        features_scaled = scaler.transform([features])
+    except Exception as e:
+        return render_template('result.html', url=url, result=f"Error extracting features: {e}")
 
     if model_type == 'random_forest':
         prediction = rf_model.predict(features_scaled)[0]

@@ -8,10 +8,11 @@ print(os.listdir('custom_templates'))
 
 app = Flask(__name__, template_folder='custom_templates')
 
-# Load models and scaler
-rf_model = pickle.load(open('models/phishing_gb.pkl', 'rb'))
-gb_model = pickle.load(open('models/phishing_rf.pkl', 'rb'))
-scaler = pickle.load(open('models/scaler.pkl', 'rb'))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get script's directory
+rf_model = pickle.load(open(os.path.join(BASE_DIR, 'models', 'phishing_gb.pkl'), 'rb'))
+gb_model = pickle.load(open(os.path.join(BASE_DIR, 'models', 'phishing_rf.pkl'), 'rb'))
+scaler = pickle.load(open(os.path.join(BASE_DIR, 'models', 'scaler.pkl'), 'rb'))
+
 
 @app.route('/')
 def home():

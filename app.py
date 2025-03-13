@@ -18,7 +18,7 @@ models_dir = os.path.join(current_dir, 'models')
 # Load models
 rf_model = pickle.load(open(os.path.join(models_dir, 'phishing_gb.pkl'), 'rb'))
 gb_model = pickle.load(open(os.path.join(models_dir, 'phishing_rf.pkl'), 'rb'))
-scaler = pickle.load(open.path.join(models_dir,'scaler.pkl'),'rb')
+scaler = pickle.load(open(os.path.join(models_dir,'scaler.pkl'),'rb')
 # rf_model = pickle.load(open('models/phishing_gb.pkl', 'rb'))
 # gb_model = pickle.load(open('models/phishing_rf.pkl', 'rb'))
 # scaler = pickle.load(open('models/scaler.pkl', 'rb'))
